@@ -1,6 +1,6 @@
 #include "cvinterface.h"
 
-cvInterface::cvInterface(QObject *parent) :
+CVInterface::CVInterface(QObject *parent) :
     QObject(parent)
 {
     qDebug("cvInterface()");
@@ -11,9 +11,11 @@ cvInterface::cvInterface(QObject *parent) :
     connect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)),Qt::DirectConnection);
     connect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
+
+    m_calc = new CVcalc(this);
 }
 
-cvInterface::~cvInterface()
+CVInterface::~CVInterface()
 {
     qDebug("~cvInterface()");
     disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
@@ -27,8 +29,9 @@ cvInterface::~cvInterface()
 
 // public //////////////////////////////////////////////////////////////////////////////////
 
-void cvInterface::connectToCV(QString host, quint16 port)
+void CVInterface::connectToCV(QString host, quint16 port)
 {
+    qDebug() << "connectToCV";
     emit cvStateChanged(cvConnecting);
     if (cvSocket->state() == QAbstractSocket::UnconnectedState) {
         cvSocket->connectToHost(host, port);
@@ -41,57 +44,62 @@ void cvInterface::connectToCV(QString host, quint16 port)
     }
 }
 
-void cvInterface::disconnectFromCV()
+void CVInterface::disconnectFromCV()
 {
+    qDebug() << "disconnectFromCV";
     emit cvStateChanged(cvDisconnecting);
-    if (cvSocket->isValid() && cvSocket->state() == QAbstractSocket::ConnectedState) {
-        cvSocket->disconnectFromHost();
+    cvSocket->disconnectFromHost();
+}
+
+void CVInterface::sendCommand(QString command)
+{
+    qDebug() << command;
+    if (cvSocket->isValid()) {
+        cvSocket->write(command.toAscii());
+        cvSocket->flush();
     }
 }
 
 // public slots //////////////////////////////////////////////////////////////////////////////////
 
-void cvInterface::slotHostFounded()
+void CVInterface::slotHostFounded()
 {
-    qDebug("host found");
+    qDebug("host lookup has succeeded");
+    emit cvStateChanged(cvHostFound);
+    emit cvStateError("host lookup has succeeded");
 }
 
-void cvInterface::slotConnected()
+void CVInterface::slotConnected()
 {
+    qDebug("connection has been successfully established");
     emit cvStateChanged(cvConnected);
-    qDebug("connected");
+    emit cvStateError("connection has been successfully established");
 }
 
-void cvInterface::slotReadyRead()
+void CVInterface::slotReadyRead()
 {
     qDebug("ready read");
+    QByteArray telemetry = cvSocket->readLine();
+    qDebug() << telemetry;
+    m_calc->getTelemetry(telemetry);
 }
 
-void cvInterface::slotWritten(qint64 bytes)
+void CVInterface::slotWritten(qint64 bytes)
 {
     qDebug() << "written" << bytes;
 }
 
-void cvInterface::slotDisconnected()
+void CVInterface::slotDisconnected()
 {
+    qDebug("socket has been disconnected");
     emit cvStateChanged(cvDisconnected);
-    qDebug("disconnected");
+    emit cvStateError("socket has been disconnected");
 }
 
-void cvInterface::displayError(QAbstractSocket::SocketError socketError)
+void CVInterface::displayError(QAbstractSocket::SocketError socketError)
 {
+    Q_UNUSED(socketError);
     emit cvStateChanged(cvError);
-    switch (socketError) {
-        case QAbstractSocket::RemoteHostClosedError:
-            qDebug("remote host closed");
-            break;
-        case QAbstractSocket::HostNotFoundError:
-            qDebug("host was not found");
-            break;
-        case QAbstractSocket::ConnectionRefusedError:
-            qDebug("connection was refused by the peer");
-            break;
-        default:
-            qDebug() << "error" << cvSocket->errorString();
-    }
+    emit cvStateError(cvSocket->errorString());
+    qDebug() << "error" << cvSocket->errorString();
 }

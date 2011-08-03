@@ -3,20 +3,25 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <cvcalc.h>
+#include <QString>
 
-class cvInterface : public QObject
+class CVInterface : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit cvInterface(QObject *parent = 0);
-    ~cvInterface();
+    explicit CVInterface(QObject *parent = 0);
+    ~CVInterface();
 
     void connectToCV(QString host, quint16 port);
     void disconnectFromCV();
 
+    void sendCommand(QString command);
+
     enum cvState {
         cvConnecting,
+        cvHostFound,
         cvConnected,
         cvDisconnecting,
         cvDisconnected,
@@ -25,12 +30,15 @@ public:
     };
 
 private:
-    QTcpSocket* cvSocket;
+    QTcpSocket *cvSocket;
+    CVcalc *m_calc;
+
 
 signals:
-    void cvStateChanged(cvInterface::cvState state);
+    void cvStateChanged(CVInterface::cvState state);
+    void cvStateError(QString socketError);
 
-public slots:
+private slots:
     void slotHostFounded();
     void slotConnected();
     void slotReadyRead();

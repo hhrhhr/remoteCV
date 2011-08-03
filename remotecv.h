@@ -20,21 +20,25 @@ public:
     ~remoteCV();
 
 protected:
-    void changeEvent(QEvent *e);
 
 private:
     Ui::remoteCV *ui;
-    cvInterface* m_cv;
-    QTimer* statusTimer;
+    CVInterface *m_cv;
+    QTimer *statusTimer;
     quint8 timerCount;
-    cvInterface::cvState cvstate;
+    CVInterface::cvState cvstate;
 
 private slots:
     void on_cvConnect_clicked();
     void on_cvDisconnect_clicked();
     void onTimeout();
-    void oncvStateChanged(cvInterface::cvState state);
+    void oncvStateChanged(CVInterface::cvState state);
+    void oncvStateError(QString socketError);
 
+    void on_getTelemetry_clicked();
+    void on_requestControl_clicked();
+    void on_setControl_clicked();
+    void on_releaseControl_clicked();
 };
 
 #endif // REMOTECV_H

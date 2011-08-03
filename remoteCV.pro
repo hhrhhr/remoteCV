@@ -11,12 +11,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        remotecv.cpp \
-    cvinterface.cpp
+    remotecv.cpp \
+    cvinterface.cpp \
+    cvcalc.cpp
 
 HEADERS  += remotecv.h \
-    cvinterface.h
+    cvinterface.h \
+    cvcalc.h
 
 FORMS    += remotecv.ui
+
+
 
 

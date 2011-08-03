@@ -50,7 +50,7 @@
         <item row="1" column="1">
          <widget class="QSpinBox" name="cvPort">
           <property name="minimum">
-           <number>1024</number>
+           <number>1</number>
           </property>
           <property name="maximum">
            <number>65535</number>
@@ -101,6 +101,50 @@
         </property>
         <property name="text">
          <string>not connected</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="cvLastError">
+        <property name="text">
+         <string>no errors</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>controls</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="getTelemetry">
+        <property name="text">
+         <string>get telemetry</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="requestControl">
+        <property name="text">
+         <string>request control</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="setControl">
+        <property name="text">
+         <string>set control</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="releaseControl">
+        <property name="text">
+         <string>release control</string>
         </property>
        </widget>
       </item>
