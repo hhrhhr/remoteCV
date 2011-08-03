@@ -81,6 +81,7 @@ void remoteCV::oncvStateChanged(CVInterface::cvState state)
             break;
         case CVInterface::cvConnected :
             ui->cvStatus->setText("connected");
+            ui->cvDisconnect->setEnabled(true);
             break;
         case CVInterface::cvDisconnecting :
             ui->cvStatus->setText("disconnecting");
