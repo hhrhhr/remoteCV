@@ -22,16 +22,19 @@ public:
 protected:
     void changeEvent(QEvent *e);
 
-private slots:
-    void on_cvConnect_clicked();
-    void on_cvDisconnect_clicked();
-    void onConnectTimeout();
-
 private:
     Ui::remoteCV *ui;
     cvInterface* m_cv;
-    QTimer* waitForConnectTimer;
+    QTimer* statusTimer;
     quint8 timerCount;
+    cvInterface::cvState cvstate;
+
+private slots:
+    void on_cvConnect_clicked();
+    void on_cvDisconnect_clicked();
+    void onTimeout();
+    void oncvStateChanged(cvInterface::cvState state);
+
 };
 
 #endif // REMOTECV_H

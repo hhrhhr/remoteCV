@@ -25,24 +25,31 @@ cvInterface::~cvInterface()
     cvSocket->deleteLater();
 }
 
-// public
+// public //////////////////////////////////////////////////////////////////////////////////
 
 void cvInterface::connectToCV(QString host, quint16 port)
 {
-    cvSocket->connectToHost(host, port);
-    if (cvSocket->waitForConnected(5000)) {
-        qDebug() << "wait for connect OK";
-    } else {
-        qDebug() << "wait for connect NOT OK";
+    emit cvStateChanged(cvConnecting);
+    if (cvSocket->state() == QAbstractSocket::UnconnectedState) {
+        cvSocket->connectToHost(host, port);
+//    if (cvSocket->waitForConnected(5000)) {
+//        qDebug() << "wait for connect OK";
+//    } else {
+//        qDebug() << "wait for connect NOT OK";
+//        emit cvStateChanged(cvError);
+//    }
     }
 }
 
 void cvInterface::disconnectFromCV()
 {
-    cvSocket->disconnectFromHost();
+    emit cvStateChanged(cvDisconnecting);
+    if (cvSocket->isValid() && cvSocket->state() == QAbstractSocket::ConnectedState) {
+        cvSocket->disconnectFromHost();
+    }
 }
 
-// public slots
+// public slots //////////////////////////////////////////////////////////////////////////////////
 
 void cvInterface::slotHostFounded()
 {
@@ -51,6 +58,7 @@ void cvInterface::slotHostFounded()
 
 void cvInterface::slotConnected()
 {
+    emit cvStateChanged(cvConnected);
     qDebug("connected");
 }
 
@@ -58,6 +66,7 @@ void cvInterface::slotReadyRead()
 {
     qDebug("ready read");
 }
+
 void cvInterface::slotWritten(qint64 bytes)
 {
     qDebug() << "written" << bytes;
@@ -65,11 +74,13 @@ void cvInterface::slotWritten(qint64 bytes)
 
 void cvInterface::slotDisconnected()
 {
+    emit cvStateChanged(cvDisconnected);
     qDebug("disconnected");
 }
 
 void cvInterface::displayError(QAbstractSocket::SocketError socketError)
 {
+    emit cvStateChanged(cvError);
     switch (socketError) {
         case QAbstractSocket::RemoteHostClosedError:
             qDebug("remote host closed");

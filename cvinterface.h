@@ -15,11 +15,20 @@ public:
     void connectToCV(QString host, quint16 port);
     void disconnectFromCV();
 
+    enum cvState {
+        cvConnecting,
+        cvConnected,
+        cvDisconnecting,
+        cvDisconnected,
+        cvError,
+        cvUnknown = -1
+    };
 
 private:
     QTcpSocket* cvSocket;
 
 signals:
+    void cvStateChanged(cvInterface::cvState state);
 
 public slots:
     void slotHostFounded();
