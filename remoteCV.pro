@@ -4,15 +4,19 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 TARGET = remoteCV
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        remotecv.cpp
+        remotecv.cpp \
+    cvinterface.cpp
 
-HEADERS  += remotecv.h
+HEADERS  += remotecv.h \
+    cvinterface.h
 
 FORMS    += remotecv.ui
+
+

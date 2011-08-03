@@ -2,6 +2,10 @@
 #define REMOTECV_H
 
 #include <QtGui/QWidget>
+#include <QDebug>
+
+#include <cvinterface.h>
+#include <QTimer>
 
 namespace Ui {
     class remoteCV;
@@ -18,8 +22,16 @@ public:
 protected:
     void changeEvent(QEvent *e);
 
+private slots:
+    void on_cvConnect_clicked();
+    void on_cvDisconnect_clicked();
+    void onConnectTimeout();
+
 private:
     Ui::remoteCV *ui;
+    cvInterface* m_cv;
+    QTimer* waitForConnectTimer;
+    quint8 timerCount;
 };
 
 #endif // REMOTECV_H
