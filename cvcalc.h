@@ -6,6 +6,7 @@
 #include <QVector3D>
 #include <QQuaternion>
 #include <QStringList>
+#include <qmath.h>
 
 class FlightData : public QObject
 {
@@ -40,6 +41,9 @@ public:
 
     void getTelemetry(QString telemetry);
     void processTelemetry();
+
+protected:
+    static const float RAD2DEG;
 
 private:
     quint8 fd_ptr; //number of copy and counter

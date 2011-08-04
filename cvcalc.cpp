@@ -1,5 +1,7 @@
 #include "cvcalc.h"
 
+const float CVcalc::RAD2DEG = (180.0/M_PI);
+
 FlightData::FlightData(QObject *parent) :
     QObject(parent)
 {
@@ -63,9 +65,9 @@ void CVcalc::getTelemetry(QString telemetry)
                   in.at( 9).toDouble(), in.at(10).toDouble(), in.at(11).toDouble(), in.at(12).toDouble(),
                   in.at(13).toDouble(), in.at(14).toDouble(), in.at(15).toDouble(), in.at(16).toDouble());
 
-    fd[N].rate = QVector3D(in.at(17).toDouble(),
-                           in.at(18).toDouble(),
-                           in.at(19).toDouble());
+    fd[N].rate = QVector3D(in.at(17).toDouble() * RAD2DEG,
+                           in.at(18).toDouble() * RAD2DEG,
+                           in.at(19).toDouble() * RAD2DEG);
 
     fd[N].step = in.at(20).toFloat();
 
@@ -85,7 +87,6 @@ void CVcalc::getTelemetry(QString telemetry)
     fd[N].controls[5] = in.at(32).toFloat();
 
     fd[N].cr = in.at(33).toInt();
-
 }
 
 // private
