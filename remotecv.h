@@ -22,9 +22,9 @@ public:
 protected:
 
 private:
-    Ui::remoteCV *ui;
-    CVInterface *m_cv;
-    QTimer *statusTimer;
+    Ui::remoteCV* ui;
+    CVInterface* m_cv;
+    QTimer* statusTimer;
     quint8 timerCount;
     CVInterface::cvState cvstate;
 

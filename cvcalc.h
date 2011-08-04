@@ -16,7 +16,7 @@ public:
     ~FlightData();
 
     quint32 simTime;    // ms
-    // m[row][column]
+                        // m[row][column]
     QMatrix4x4 M;       // m[0][3] posX, m[1][3] posY, m[2][3] posZ; m
     QVector3D rate;     // roll, yaw, pitch; rad/sec
     float step;         // simulator step time; ms (default = 1/120)
@@ -39,12 +39,12 @@ public:
     ~CVcalc();
 
     void getTelemetry(QString telemetry);
+    void processTelemetry();
 
 private:
     quint8 fd_ptr; //number of copy and counter
     FlightData* fd;
 
-    void setControl(QString control);
     void matrix2quaternion(const QMatrix4x4 M, QQuaternion Q);
     void matrix2rpy(const QMatrix4x4 M, QVector3D rpy);
     void quaternion2rpy(const QQuaternion Q, QVector3D rpy);

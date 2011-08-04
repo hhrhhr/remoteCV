@@ -32,8 +32,6 @@ RemoteCV::~RemoteCV()
     delete ui;
 }
 
-// protected
-
 // private slots
 
 void RemoteCV::on_cvConnect_clicked()

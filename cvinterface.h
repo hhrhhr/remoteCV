@@ -30,9 +30,8 @@ public:
     };
 
 private:
-    QTcpSocket *cvSocket;
-    CVcalc *m_calc;
-
+    QTcpSocket* cvSocket;
+    CVcalc* m_calc;
 
 signals:
     void cvStateChanged(CVInterface::cvState state);

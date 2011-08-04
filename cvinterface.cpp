@@ -8,7 +8,7 @@ CVInterface::CVInterface(QObject *parent) :
     connect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
     connect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
     connect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()), Qt::DirectConnection);
-    connect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)),Qt::DirectConnection);
+    connect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
     connect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
 
@@ -37,12 +37,6 @@ void CVInterface::connectToCV(QString host, quint16 port)
     emit cvStateChanged(cvConnecting);
     if (cvSocket->state() == QAbstractSocket::UnconnectedState) {
         cvSocket->connectToHost(host, port);
-//    if (cvSocket->waitForConnected(5000)) {
-//        qDebug() << "wait for connect OK";
-//    } else {
-//        qDebug() << "wait for connect NOT OK";
-//        emit cvStateChanged(cvError);
-//    }
     }
 }
 
