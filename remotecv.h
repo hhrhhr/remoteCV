@@ -11,13 +11,13 @@ namespace Ui {
     class remoteCV;
 }
 
-class remoteCV : public QWidget
+class RemoteCV : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit remoteCV(QWidget *parent = 0);
-    ~remoteCV();
+    explicit RemoteCV(QWidget *parent = 0);
+    ~RemoteCV();
 
 protected:
 

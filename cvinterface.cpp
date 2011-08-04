@@ -3,7 +3,7 @@
 CVInterface::CVInterface(QObject *parent) :
     QObject(parent)
 {
-    qDebug("cvInterface()");
+    qDebug("CVInterface");
     cvSocket = new QTcpSocket(this);
     connect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
     connect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
@@ -17,14 +17,16 @@ CVInterface::CVInterface(QObject *parent) :
 
 CVInterface::~CVInterface()
 {
-    qDebug("~cvInterface()");
-    disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
-    disconnect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
-    disconnect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
-    disconnect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
-    disconnect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
+    qDebug("~CVInterface");
+    delete m_calc;
+
     disconnect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
-    cvSocket->deleteLater();
+    disconnect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
+    disconnect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
+    disconnect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+    disconnect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
+    disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
+    delete cvSocket;
 }
 
 // public //////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +81,7 @@ void CVInterface::slotConnected()
 void CVInterface::slotReadyRead()
 {
     qDebug("ready read");
-    QByteArray telemetry = cvSocket->readLine();
+    QString telemetry = cvSocket->readLine();
     qDebug() << telemetry;
     m_calc->getTelemetry(telemetry);
 }

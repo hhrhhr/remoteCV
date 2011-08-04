@@ -1,10 +1,11 @@
 #include "remotecv.h"
 #include "ui_remotecv.h"
 
-remoteCV::remoteCV(QWidget *parent) :
+RemoteCV::RemoteCV(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::remoteCV)
 {
+    qDebug() << "RemoteCV";
     ui->setupUi(this);
 
     statusTimer = new QTimer();
@@ -19,26 +20,30 @@ remoteCV::remoteCV(QWidget *parent) :
             this, SLOT(oncvStateError(QString)));
 }
 
-remoteCV::~remoteCV()
+RemoteCV::~RemoteCV()
 {
-    delete ui;
+    qDebug() << "~RemoteCV";
+    disconnect(m_cv, SIGNAL(cvStateError(QString)),
+            this, SLOT(oncvStateError(QString)));
     disconnect(m_cv, SIGNAL(cvStateChanged(CVInterface::cvState)),
                this, SLOT(oncvStateChanged(CVInterface::cvState)));
     delete m_cv;
+    delete statusTimer;
+    delete ui;
 }
 
 // protected
 
 // private slots
 
-void remoteCV::on_cvConnect_clicked()
+void RemoteCV::on_cvConnect_clicked()
 {
     ui->cvConnect->setDisabled(TRUE);
     statusTimer->start(1000);
     m_cv->connectToCV(ui->cvHost->text(), ui->cvPort->value());
 }
 
-void remoteCV::on_cvDisconnect_clicked()
+void RemoteCV::on_cvDisconnect_clicked()
 {
     m_cv->disconnectFromCV();
     statusTimer->stop();
@@ -49,10 +54,9 @@ void remoteCV::on_cvDisconnect_clicked()
     cvstate = CVInterface::cvDisconnected;
 }
 
-void remoteCV::onTimeout()
+void RemoteCV::onTimeout()
 {
-    if (cvstate == CVInterface::cvConnecting
-        || cvstate == CVInterface::cvHostFound
+    if (cvstate == CVInterface::cvConnecting || cvstate == CVInterface::cvHostFound
         || cvstate == CVInterface::cvError) {
         QString status = ui->cvStatus->text();
         if (timerCount < 4) {
@@ -69,7 +73,7 @@ void remoteCV::onTimeout()
     }
 }
 
-void remoteCV::oncvStateChanged(CVInterface::cvState state)
+void RemoteCV::oncvStateChanged(CVInterface::cvState state)
 {
     cvstate = state;
     switch (state) {
@@ -104,27 +108,27 @@ void remoteCV::oncvStateChanged(CVInterface::cvState state)
     }
 }
 
-void remoteCV::oncvStateError(QString socketError)
+void RemoteCV::oncvStateError(QString socketError)
 {
     ui->cvLastError->setText(socketError);
 }
 
-void remoteCV::on_getTelemetry_clicked()
+void RemoteCV::on_getTelemetry_clicked()
 {
     m_cv->sendCommand("getTelemetry-2\n");
 }
 
-void remoteCV::on_requestControl_clicked()
+void RemoteCV::on_requestControl_clicked()
 {
     m_cv->sendCommand("requestControl-2\n");
 }
 
-void remoteCV::on_setControl_clicked()
+void RemoteCV::on_setControl_clicked()
 {
     m_cv->sendCommand("setControls-2\n");
 }
 
-void remoteCV::on_releaseControl_clicked()
+void RemoteCV::on_releaseControl_clicked()
 {
     m_cv->sendCommand("releaseControl-2\n");
 }
