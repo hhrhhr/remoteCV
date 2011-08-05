@@ -36,7 +36,7 @@ public:
     QVector3D accel;    // accelerations
     QVector3D speed;    // speed
     QVector3D position; // position in world
-    float controls[6];  // controls
+    qint8 controls[6];  // controls
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -158,12 +158,12 @@ void RemoteCV::onScreenUpdate()
             ui->zSpeed->setValue(a->speed.z());
             break;
         case 2:
-            ui->ch1->setValue(int(64 * a->controls[0]));
-            ui->ch2->setValue(int(64 * a->controls[1]));
-            ui->ch3->setValue(int(64 * a->controls[2]));
-            ui->ch4->setValue(int(64 * a->controls[3]));
-            ui->ch5->setValue(int(64 * a->controls[4]));
-            ui->ch6->setValue(int(64 * a->controls[5]));
+            ui->ch1->setValue(a->controls[0]);
+            ui->ch2->setValue(a->controls[1]);
+            ui->ch3->setValue(a->controls[2]);
+            ui->ch4->setValue(a->controls[3]);
+            ui->ch5->setValue(a->controls[4]);
+            ui->ch6->setValue(a->controls[5]);
             break;
     }
 }

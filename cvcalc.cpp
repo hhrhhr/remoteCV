@@ -53,20 +53,24 @@ void CVcalc::getTelemetry(QString telemetry)
         fd[N].simTime = in.at(0).toInt();
 
         fd[N].M = QMatrix4x4(
-                      in.at( 1).toDouble(), in.at( 2).toDouble(), in.at( 3).toDouble(), in.at( 4).toDouble(),
-                      in.at( 5).toDouble(), in.at( 6).toDouble(), in.at( 7).toDouble(), in.at( 8).toDouble(),
-                      in.at( 9).toDouble(), in.at(10).toDouble(), in.at(11).toDouble(), in.at(12).toDouble(),
-                      in.at(13).toDouble(), in.at(14).toDouble(), in.at(15).toDouble(), in.at(16).toDouble());
+                  in.at( 1).toDouble(), in.at( 2).toDouble(), in.at( 3).toDouble(), in.at( 4).toDouble(),
+                  in.at( 5).toDouble(), in.at( 6).toDouble(), in.at( 7).toDouble(), in.at( 8).toDouble(),
+                  in.at( 9).toDouble(), in.at(10).toDouble(), in.at(11).toDouble(), in.at(12).toDouble(),
+                  in.at(13).toDouble(), in.at(14).toDouble(), in.at(15).toDouble(), in.at(16).toDouble());
 
-        fd[N].rate = QVector3D(in.at(17).toDouble() * RAD2DEG,
-                               in.at(18).toDouble() * RAD2DEG,
-                               in.at(19).toDouble() * RAD2DEG);
+//        fd[N].M = QMatrix4x4(
+//                  in.at( 1).toDouble(), in.at( 3).toDouble(), in.at( 2).toDouble(), in.at( 4).toDouble(),
+//                  -in.at( 5).toDouble(), in.at( 6).toDouble(), -in.at( 7).toDouble(), in.at( 8).toDouble(),
+//                  -in.at( 9).toDouble(), 1.-in.at(10).toDouble(), in.at(11).toDouble(), in.at(12).toDouble(),
+//                  in.at(13).toDouble(), in.at(14).toDouble(), in.at(15).toDouble(), in.at(16).toDouble());
+
+        fd[N].rate = QVector3D(in.at(17).toDouble() * -RAD2DEG,
+                               in.at(18).toDouble() * -RAD2DEG,
+                               in.at(19).toDouble() * -RAD2DEG);
 
         fd[N].step = in.at(20).toFloat();
 
-        fd[N].speed = QVector3D(in.at(21).toDouble(),
-                                in.at(22).toDouble(),
-                                in.at(23).toDouble());
+        fd[N].speed = QVector3D(in.at(21).toDouble(), in.at(22).toDouble(), in.at(23).toDouble());
 
         fd[N].crash = in.at(24).toInt();
         fd[N].stop  = in.at(25).toInt();
@@ -84,24 +88,18 @@ void CVcalc::getTelemetry(QString telemetry)
     // parse end
 
     FlightData& f = fd[N];
-
     att->time = f.simTime;
+    att->position   = QVector3D(f.M(0, 3)  , f.M(1, 3)  , f.M(2, 3));
+    att->gyro       = QVector3D(f.rate.x() , f.rate.y() , f.rate.z());
+    att->speed      = QVector3D(f.speed.x(), f.speed.y(), f.speed.z());
 
-    att->position = QVector3D(f.M(0,3),
-                              f.M(1,3),
-                              f.M(2,3));
+//    f.M = f.M.transposed();
+//    f.M.rotate(180, 0, 1, 0);
+//    f.M.flipCoordinates();
 
-    att->gyro = QVector3D(f.rate.x(),
-                          f.rate.y(),
-                          f.rate.z());
-
-    att->speed = QVector3D(f.speed.x(),
-                           f.speed.y(),
-                           f.speed.z());
-
-    QVector3D rpy;
-    cvMatrix2rpy(f.M, rpy);
-//    qDebug() << "rpy      " << rpy;
+    QVector3D rpy1;
+    cvMatrix2rpy(f.M, rpy1);
+//    qDebug() << "rpy1     " << rpy1;
 
     QQuaternion Q;
     cvMatrix2quaternion(f.M, Q);
@@ -112,20 +110,12 @@ void CVcalc::getTelemetry(QString telemetry)
     quaternion2rpy(Q, rpy2);
 //    qDebug() << "rpy2     " << rpy2 << "\n";
 
-    att->attitude = QVector3D(rpy.x(),
-                              rpy.y(),
-                              rpy.z());
+    att->attitude  = QVector3D(rpy1.x(), rpy1.y(), rpy1.z());
+    att->attitude2 = QVector3D(rpy2.x(), rpy2.y(), rpy2.z());
 
-    att->attitude2 = QVector3D(rpy2.x(),
-                              rpy2.y(),
-                              rpy2.z());
-
-    att->controls[0] = f.controls[0];
-    att->controls[1] = f.controls[1];
-    att->controls[2] = f.controls[2];
-    att->controls[3] = f.controls[3];
-    att->controls[4] = f.controls[4];
-    att->controls[5] = f.controls[5];
+    for (int i = 0; i < 6; ++i) {
+        att->controls[i] = qint8(64 * f.controls[i]);
+    }
 }
 
 // private
@@ -158,9 +148,9 @@ void CVcalc::cvMatrix2rpy(const QMatrix4x4 &M, QVector3D &rpy)
         yaw   = qAtan2(-M(2, 0), M(0, 0));
     }
 
-    rpy.setX(roll  * RAD2DEG);
-    rpy.setY(pitch * RAD2DEG);
-    rpy.setZ(yaw   * RAD2DEG);
+    rpy.setX(roll  * -RAD2DEG);
+    rpy.setY(pitch * -RAD2DEG);
+    rpy.setZ(yaw   * -RAD2DEG);
 }
 
 void CVcalc::cvMatrix2quaternion(const QMatrix4x4 &M, QQuaternion &Q)
@@ -214,7 +204,7 @@ void CVcalc::quaternion2rpy(const QQuaternion &Q, QVector3D &rpy)
         yaw = qAtan2(y1, y2);
     }
 
-    rpy.setX(roll  * RAD2DEG);
-    rpy.setY(pitch * RAD2DEG);
-    rpy.setZ(yaw   * RAD2DEG);
+    rpy.setX(roll  * -RAD2DEG);
+    rpy.setY(pitch * -RAD2DEG);
+    rpy.setZ(yaw   * -RAD2DEG);
 }
