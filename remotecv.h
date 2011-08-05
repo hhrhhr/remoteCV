@@ -19,12 +19,13 @@ public:
     explicit RemoteCV(QWidget *parent = 0);
     ~RemoteCV();
 
-protected:
+    bool showRawTelemetry;
 
 private:
     Ui::remoteCV* ui;
     CVInterface* m_cv;
     QTimer* statusTimer;
+    QTimer* screenUpdate;
     quint8 timerCount;
     CVInterface::cvState cvstate;
 
@@ -34,6 +35,9 @@ private slots:
     void onTimeout();
     void oncvStateChanged(CVInterface::cvState state);
     void oncvStateError(QString socketError);
+    void slotProcessOutput(QString txt);
+
+    void onScreenUpdate();
 
     void on_getTelemetry_clicked();
     void on_requestControl_clicked();

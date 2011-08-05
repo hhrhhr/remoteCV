@@ -5,27 +5,27 @@ CVInterface::CVInterface(QObject *parent) :
 {
     qDebug("CVInterface");
     cvSocket = new QTcpSocket(this);
+    m_calc = new CVcalc(this);
+
     connect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
     connect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
     connect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()), Qt::DirectConnection);
     connect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
     connect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     connect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
-
-    m_calc = new CVcalc(this);
 }
 
 CVInterface::~CVInterface()
 {
     qDebug("~CVInterface");
-    delete m_calc;
-
     disconnect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
     disconnect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
     disconnect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
     disconnect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
     disconnect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
     disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
+
+    delete m_calc;
     delete cvSocket;
 }
 
@@ -49,7 +49,7 @@ void CVInterface::disconnectFromCV()
 
 void CVInterface::sendCommand(QString command)
 {
-    qDebug() << command;
+//    qDebug() << command;
     if (cvSocket->isValid()) {
         cvSocket->write(command.toAscii());
         cvSocket->flush();
@@ -74,15 +74,15 @@ void CVInterface::slotConnected()
 
 void CVInterface::slotReadyRead()
 {
-    qDebug("ready read");
     QString telemetry = cvSocket->readLine();
-    qDebug() << telemetry;
     m_calc->getTelemetry(telemetry);
+
+    emit processOutput(telemetry);
 }
 
 void CVInterface::slotWritten(qint64 bytes)
 {
-    qDebug() << "written" << bytes;
+//    qDebug() << "written" << bytes;
 }
 
 void CVInterface::slotDisconnected()

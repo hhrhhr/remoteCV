@@ -29,13 +29,14 @@ public:
         cvUnknown = -1
     };
 
+    CVcalc* m_calc;
 private:
     QTcpSocket* cvSocket;
-    CVcalc* m_calc;
 
 signals:
     void cvStateChanged(CVInterface::cvState state);
     void cvStateError(QString socketError);
+    void processOutput(QString str);
 
 private slots:
     void slotHostFounded();

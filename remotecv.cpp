@@ -8,6 +8,8 @@ RemoteCV::RemoteCV(QWidget *parent) :
     qDebug() << "RemoteCV";
     ui->setupUi(this);
 
+    showRawTelemetry = FALSE;
+
     statusTimer = new QTimer();
     connect(statusTimer, SIGNAL(timeout()), this, SLOT(onTimeout()));
     timerCount = 0;
@@ -18,6 +20,10 @@ RemoteCV::RemoteCV(QWidget *parent) :
             this, SLOT(oncvStateChanged(CVInterface::cvState)));
     connect(m_cv, SIGNAL(cvStateError(QString)),
             this, SLOT(oncvStateError(QString)));
+    connect(m_cv, SIGNAL(processOutput(QString)), this, SLOT(slotProcessOutput(QString)));
+
+    screenUpdate = new QTimer();
+    connect(screenUpdate, SIGNAL(timeout()), this, SLOT(onScreenUpdate()));
 }
 
 RemoteCV::~RemoteCV()
@@ -38,6 +44,7 @@ void RemoteCV::on_cvConnect_clicked()
 {
     ui->cvConnect->setDisabled(TRUE);
     statusTimer->start(1000);
+    screenUpdate->start(200);
     m_cv->connectToCV(ui->cvHost->text(), ui->cvPort->value());
 }
 
@@ -45,6 +52,7 @@ void RemoteCV::on_cvDisconnect_clicked()
 {
     m_cv->disconnectFromCV();
     statusTimer->stop();
+    screenUpdate->stop();
     ui->cvLastError->setText("no error");
     ui->cvDisconnect->setDisabled(TRUE);
     ui->cvConnect->setEnabled(TRUE);
@@ -106,6 +114,60 @@ void RemoteCV::oncvStateChanged(CVInterface::cvState state)
     }
 }
 
+void RemoteCV::slotProcessOutput(QString txt)
+{
+    if (showRawTelemetry) {
+        ui->console->setPlainText(txt);
+        showRawTelemetry = FALSE;
+    }
+}
+
+void RemoteCV::onScreenUpdate()
+{
+    m_cv->sendCommand("getTelemetry-2\n");
+    Attitude* a = m_cv->m_calc->att;
+
+    switch (ui->tabWidget->currentIndex()) {
+        case 0:
+            break;
+        case 1:
+            ui->lbSimTimer->setText(QString::number(a->time/1000) + "sec");
+
+            ui->roll->setValue(a->attitude.x());
+            ui->pitch->setValue(a->attitude.y());
+            ui->yaw->setValue(a->attitude.z());
+
+            ui->roll_2->setValue(a->attitude2.x());
+            ui->pitch_2->setValue(a->attitude2.y());
+            ui->yaw_2->setValue(a->attitude2.z());
+
+            ui->xPos->setText(QString::number(a->position.x()));
+            ui->yPos->setText(QString::number(a->position.y()));
+            ui->zPos->setText(QString::number(a->position.z()));
+
+            ui->xRate->setValue(a->gyro.x());
+            ui->yRate->setValue(a->gyro.y());
+            ui->zRate->setValue(a->gyro.z());
+
+            ui->xAccel->setValue(a->accel.x());
+            ui->yAccel->setValue(a->accel.y());
+            ui->zAccel->setValue(a->accel.z());
+
+            ui->xSpeed->setValue(a->speed.x());
+            ui->ySpeed->setValue(a->speed.y());
+            ui->zSpeed->setValue(a->speed.z());
+            break;
+        case 2:
+            ui->ch1->setValue(int(64 * a->controls[0]));
+            ui->ch2->setValue(int(64 * a->controls[1]));
+            ui->ch3->setValue(int(64 * a->controls[2]));
+            ui->ch4->setValue(int(64 * a->controls[3]));
+            ui->ch5->setValue(int(64 * a->controls[4]));
+            ui->ch6->setValue(int(64 * a->controls[5]));
+            break;
+    }
+}
+
 void RemoteCV::oncvStateError(QString socketError)
 {
     ui->cvLastError->setText(socketError);
@@ -113,6 +175,7 @@ void RemoteCV::oncvStateError(QString socketError)
 
 void RemoteCV::on_getTelemetry_clicked()
 {
+    showRawTelemetry = TRUE;
     m_cv->sendCommand("getTelemetry-2\n");
 }
 
