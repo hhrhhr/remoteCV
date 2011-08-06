@@ -54,10 +54,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <property name="usesScrollButtons">
-      <bool>true</bool>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabSettings">
       <attribute name="title">
@@ -531,9 +528,6 @@
            <property name="maximum">
             <number>300</number>
            </property>
-           <property name="wrapping">
-            <bool>false</bool>
-           </property>
            <property name="notchTarget">
             <double>50.000000000000000</double>
            </property>
@@ -556,9 +550,6 @@
            <property name="maximum">
             <number>300</number>
            </property>
-           <property name="wrapping">
-            <bool>false</bool>
-           </property>
            <property name="notchTarget">
             <double>50.000000000000000</double>
            </property>
@@ -580,9 +571,6 @@
            </property>
            <property name="maximum">
             <number>300</number>
-           </property>
-           <property name="wrapping">
-            <bool>false</bool>
            </property>
            <property name="notchTarget">
             <double>50.000000000000000</double>
@@ -874,9 +862,6 @@
            <property name="maximum">
             <number>30</number>
            </property>
-           <property name="wrapping">
-            <bool>false</bool>
-           </property>
            <property name="notchTarget">
             <double>10.000000000000000</double>
            </property>
@@ -899,9 +884,6 @@
            <property name="maximum">
             <number>30</number>
            </property>
-           <property name="wrapping">
-            <bool>false</bool>
-           </property>
            <property name="notchTarget">
             <double>10.000000000000000</double>
            </property>
@@ -923,9 +905,6 @@
            </property>
            <property name="maximum">
             <number>30</number>
-           </property>
-           <property name="wrapping">
-            <bool>false</bool>
            </property>
            <property name="notchTarget">
             <double>10.000000000000000</double>
