@@ -29,9 +29,9 @@ void CVcalc::getTelemetry(QString telemetry)
     QStringList in = telemetry.split(" ");
     if ( in.length() < 34 ) {
         if (in.length() == 1 && in.at(0) == "ok\n") {
-            qDebug() << "CVSimulator::processUpdate: previous command OK";
+            qDebug() << "previous command OK";
         } else {
-            qDebug() << "CVSimulator::processUpdate: small packet detected:\n" << telemetry;
+            qDebug() << "small packet detected:\n" << telemetry;
         }
         return;
     }
@@ -58,15 +58,7 @@ void CVcalc::getTelemetry(QString telemetry)
                   in.at( 9).toDouble(), in.at(10).toDouble(), in.at(11).toDouble(), in.at(12).toDouble(),
                   in.at(13).toDouble(), in.at(14).toDouble(), in.at(15).toDouble(), in.at(16).toDouble());
 
-//        fd[N].M = QMatrix4x4(
-//                  in.at( 1).toDouble(), in.at( 3).toDouble(), in.at( 2).toDouble(), in.at( 4).toDouble(),
-//                  -in.at( 5).toDouble(), in.at( 6).toDouble(), -in.at( 7).toDouble(), in.at( 8).toDouble(),
-//                  -in.at( 9).toDouble(), 1.-in.at(10).toDouble(), in.at(11).toDouble(), in.at(12).toDouble(),
-//                  in.at(13).toDouble(), in.at(14).toDouble(), in.at(15).toDouble(), in.at(16).toDouble());
-
-        fd[N].rate = QVector3D(in.at(17).toDouble() * -RAD2DEG,
-                               in.at(18).toDouble() * -RAD2DEG,
-                               in.at(19).toDouble() * -RAD2DEG);
+        fd[N].rate = QVector3D(in.at(17).toDouble(), in.at(18).toDouble(), in.at(19).toDouble());
 
         fd[N].step = in.at(20).toFloat();
 
@@ -88,30 +80,43 @@ void CVcalc::getTelemetry(QString telemetry)
     // parse end
 
     FlightData& f = fd[N];
-    att->time = f.simTime;
-    att->position   = QVector3D(f.M(0, 3)  , f.M(1, 3)  , f.M(2, 3));
-    att->gyro       = QVector3D(f.rate.x() , f.rate.y() , f.rate.z());
-    att->speed      = QVector3D(f.speed.x(), f.speed.y(), f.speed.z());
+    FlightData& fo = fd[O];
 
-//    f.M = f.M.transposed();
-//    f.M.rotate(180, 0, 1, 0);
-//    f.M.flipCoordinates();
+    att->time       = f.simTime;
+    att->position   = QVector3D(f.M(0, 3), f.M(1, 3), f.M(2, 3));
+    att->gyro       = f.rate * -RAD2DEG;
+    att->speedNED   = f.speed;
+    att->airspeed   = f.speed.length();
+    QVector3D gs = QVector3D(f.speed.x(), 0.0, f.speed.z());
+    att->groundspeed= gs.length();
+
 
     QVector3D rpy1;
     cvMatrix2rpy(f.M, rpy1);
+    rpy1 *= -1; // mirror the vector
 //    qDebug() << "rpy1     " << rpy1;
 
     QQuaternion Q;
     cvMatrix2quaternion(f.M, Q);
 //    qDebug() << "quat     " << Q;
 
-    // just for check
     QVector3D rpy2;
     quaternion2rpy(Q, rpy2);
+    rpy2 *= -1; // mirror the vector
 //    qDebug() << "rpy2     " << rpy2 << "\n";
 
-    att->attitude  = QVector3D(rpy1.x(), rpy1.y(), rpy1.z());
-    att->attitude2 = QVector3D(rpy2.x(), rpy2.y(), rpy2.z());
+    att->attitude  = rpy1;
+    att->attitude2 = rpy2;
+
+//    qreal dt = f.simTime - fo.simTime;
+//    QVector3D dv = f.speed - fo.speed;
+//    QVector3D a = (dv * 1000 / dt );
+//    a.setX(a.x() * -1.0d);
+//    a.setY(a.y() -  9.81d);
+//    a.setZ(a.z() * -1.0d);
+//    f.M = f.M.inverted();
+//    a = f.M.mapVector(a);
+//    att->accel = a;
 
     for (int i = 0; i < 6; ++i) {
         att->controls[i] = qint8(64 * f.controls[i]);
@@ -122,6 +127,8 @@ void CVcalc::getTelemetry(QString telemetry)
 
 /*
  * all conversion code from http://www.euclideanspace.com
+ *
+ * TODO: check "_copysign" on other platforms (win ok)
  */
 
 void CVcalc::cvMatrix2rpy(const QMatrix4x4 &M, QVector3D &rpy)
@@ -130,17 +137,11 @@ void CVcalc::cvMatrix2rpy(const QMatrix4x4 &M, QVector3D &rpy)
     qreal pitch;
     qreal yaw;
 
-    if (M(1, 0) > 0.998d) { // ~86.3°
-        // north pole gimbal lock
-        qDebug() << "NORTH 111";
+    if (qFabs(M(1, 0)) > 0.998d) { // ~86.3°
+        // gimbal lock
+//        qDebug() << "gimbal lock";
         roll  = 0.0d;
-        pitch = M_PI_2;
-        yaw   = qAtan2(M(0, 2), M(2, 2));
-    } else if (M(1, 0) < -0.998d) {
-        // south pole gimbal lock
-        qDebug() << "SOUTH 111";
-        roll  = 0.0d;
-        pitch = -M_PI_2;
+        pitch = _copysign(M_PI_2, M(1, 0));
         yaw   = qAtan2(M(0, 2), M(2, 2));
     } else {
         roll  = qAtan2(-M(1, 2), M(1, 1));
@@ -148,9 +149,9 @@ void CVcalc::cvMatrix2rpy(const QMatrix4x4 &M, QVector3D &rpy)
         yaw   = qAtan2(-M(2, 0), M(0, 0));
     }
 
-    rpy.setX(roll  * -RAD2DEG);
-    rpy.setY(pitch * -RAD2DEG);
-    rpy.setZ(yaw   * -RAD2DEG);
+    rpy.setX(roll  * RAD2DEG);
+    rpy.setY(pitch * RAD2DEG);
+    rpy.setZ(yaw   * RAD2DEG);
 }
 
 void CVcalc::cvMatrix2quaternion(const QMatrix4x4 &M, QQuaternion &Q)
@@ -162,7 +163,6 @@ void CVcalc::cvMatrix2quaternion(const QMatrix4x4 &M, QQuaternion &Q)
     y = qSqrt(qMax(0.0d, ((1.0d - M(0, 0)) + M(1, 1)) - M(2, 2))) / 2.0d;
     z = qSqrt(qMax(0.0d,  (1.0d - M(0, 0)  - M(1, 1)) + M(2, 2))) / 2.0d;
 
-    // TODO: check "_copysign" on other platforms (win ok)
     x = _copysign(x, (M(2, 1) - M(1, 2)));
     y = _copysign(y, (M(0, 2) - M(2, 0)));
     z = _copysign(z, (M(1, 0) - M(0, 1)));
@@ -176,35 +176,33 @@ void CVcalc::cvMatrix2quaternion(const QMatrix4x4 &M, QQuaternion &Q)
 void CVcalc::quaternion2rpy(const QQuaternion &Q, QVector3D &rpy)
 {
     qreal roll, pitch, yaw;
+    qreal test = 2.0d * (Q.x() * Q.y() + Q.z() * Q.scalar());
 
-    qreal test = Q.x() * Q.y() + Q.z() * Q.scalar();
-    if (qFabs(test) > 0.499d) {
-        // north/south pole gimbal lock
-        if (test > 0.499d)
-            qDebug() << "NORTH 222";
-        if (test < -0.499d)
-            qDebug() << "SOUTH 222";
+    if (qFabs(test) > 0.998d) {
+        // gimbal lock
+//        qDebug() << "gimbal lock";
         roll = 0.0d;
         pitch = _copysign(M_PI_2, test);
         yaw = 2.0d * qAtan2(Q.x(), Q.scalar());
         yaw = _copysign(yaw, test);
     } else {
-        qreal qxx = Q.x() * Q.x();  //
-        qreal qyy = Q.y() * Q.y();  //
-        qreal qzz = Q.z() * Q.z();  //
+        qreal q2s = 2.0d * Q.scalar();
+        qreal q2z = 2.0d * Q.z();
+        qreal q2xx = 2.0d * Q.x() * Q.x();
+        qreal q2yy = 2.0d * Q.y() * Q.y();
+        qreal q2zz = 2.0d * Q.z() * Q.z();
 
-        qreal r1 = 2.0d * Q.x() * Q.scalar() - 2.0d * Q.y() * Q.z();
-        qreal y1 = 2.0d * Q.y() * Q.scalar() - 2.0d * Q.x() * Q.z();
-
-        qreal r2 = 1.0d - 2.0d * qxx - 2.0d * qzz;
-        qreal y2 = 1.0d - 2.0d * qyy - 2.0d * qzz;
+        qreal r1 = Q.x() * q2s - Q.y() * q2z;
+        qreal y1 = Q.y() * q2s - Q.x() * q2z;
+        qreal r2 = 1.0d - q2xx - q2zz;
+        qreal y2 = 1.0d - q2yy - q2zz;
 
         roll = qAtan2(r1, r2);
-        pitch = qAsin(2.0d * test);
+        pitch = qAsin(test);
         yaw = qAtan2(y1, y2);
     }
 
-    rpy.setX(roll  * -RAD2DEG);
-    rpy.setY(pitch * -RAD2DEG);
-    rpy.setZ(yaw   * -RAD2DEG);
+    rpy.setX(roll  * RAD2DEG);
+    rpy.setY(pitch * RAD2DEG);
+    rpy.setZ(yaw   * RAD2DEG);
 }

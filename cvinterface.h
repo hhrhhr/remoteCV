@@ -32,10 +32,11 @@ public:
     CVcalc* m_calc;
 private:
     QTcpSocket* cvSocket;
+    QString tType;
 
 signals:
-    void cvStateChanged(CVInterface::cvState state);
-    void cvStateError(QString socketError);
+    void cvStateChanged(CVInterface::cvState state, QString socketError);
+//    void cvStateError(QString socketError);
     void processOutput(QString str);
 
 private slots:
@@ -45,7 +46,7 @@ private slots:
     void slotWritten(qint64 bytes);
     void slotDisconnected();
     void displayError(QAbstractSocket::SocketError socketError);
-
+    void onNeedTelemetry(QString type);
 };
 
 #endif // CVINTERFACE_H

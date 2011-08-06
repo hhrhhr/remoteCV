@@ -7,6 +7,9 @@ CVInterface::CVInterface(QObject *parent) :
     cvSocket = new QTcpSocket(this);
     m_calc = new CVcalc(this);
 
+    connect(parent, SIGNAL(needTelemetry(QString)), this, SLOT(onNeedTelemetry(QString)));
+    tType = "";
+
     connect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
     connect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
     connect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()), Qt::DirectConnection);
@@ -18,15 +21,15 @@ CVInterface::CVInterface(QObject *parent) :
 CVInterface::~CVInterface()
 {
     qDebug("~CVInterface");
-    disconnect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
-    disconnect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
-    disconnect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
-    disconnect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
-    disconnect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
-    disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
+//    disconnect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
+//    disconnect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
+//    disconnect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
+//    disconnect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+//    disconnect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
+//    disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
 
-    delete m_calc;
-    delete cvSocket;
+//    delete m_calc;
+//    delete cvSocket;
 }
 
 // public //////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +37,7 @@ CVInterface::~CVInterface()
 void CVInterface::connectToCV(QString host, quint16 port)
 {
     qDebug() << "connectToCV";
-    emit cvStateChanged(cvConnecting);
+    emit cvStateChanged(cvConnecting, "");
     if (cvSocket->state() == QAbstractSocket::UnconnectedState) {
         cvSocket->connectToHost(host, port);
     }
@@ -43,7 +46,7 @@ void CVInterface::connectToCV(QString host, quint16 port)
 void CVInterface::disconnectFromCV()
 {
     qDebug() << "disconnectFromCV";
-    emit cvStateChanged(cvDisconnecting);
+    emit cvStateChanged(cvDisconnecting, "");
     cvSocket->disconnectFromHost();
 }
 
@@ -61,15 +64,20 @@ void CVInterface::sendCommand(QString command)
 void CVInterface::slotHostFounded()
 {
     qDebug("host lookup has succeeded");
-    emit cvStateChanged(cvHostFound);
-    emit cvStateError("host lookup has succeeded");
+    emit cvStateChanged(cvHostFound, "host lookup has succeeded");
+//    emit cvStateError("host lookup has succeeded");
 }
 
 void CVInterface::slotConnected()
 {
     qDebug("connection has been successfully established");
-    emit cvStateChanged(cvConnected);
-    emit cvStateError("connection has been successfully established");
+    emit cvStateChanged(cvConnected, "connection has been successfully established");
+//    emit cvStateError("connection has been successfully established");
+}
+
+void CVInterface::onNeedTelemetry(QString type)
+{
+    tType = type;
 }
 
 void CVInterface::slotReadyRead()
@@ -77,7 +85,10 @@ void CVInterface::slotReadyRead()
     QString telemetry = cvSocket->readLine();
     m_calc->getTelemetry(telemetry);
 
-    emit processOutput(telemetry);
+    if (tType == "raw") {
+        emit processOutput(telemetry);
+        tType = "";
+    }
 }
 
 void CVInterface::slotWritten(qint64 bytes)
@@ -88,14 +99,14 @@ void CVInterface::slotWritten(qint64 bytes)
 void CVInterface::slotDisconnected()
 {
     qDebug("socket has been disconnected");
-    emit cvStateChanged(cvDisconnected);
-    emit cvStateError("socket has been disconnected");
+    emit cvStateChanged(cvDisconnected, "socket has been disconnected");
+//    emit cvStateError("socket has been disconnected");
 }
 
 void CVInterface::displayError(QAbstractSocket::SocketError socketError)
 {
     Q_UNUSED(socketError);
-    emit cvStateChanged(cvError);
-    emit cvStateError(cvSocket->errorString());
+    emit cvStateChanged(cvError, cvSocket->errorString());
+//    emit cvStateError(cvSocket->errorString());
     qDebug() << "error" << cvSocket->errorString();
 }

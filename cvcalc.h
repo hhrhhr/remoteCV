@@ -29,14 +29,16 @@ class Attitude
 {
 public:
     Attitude() {}
-    quint32 time;       // sim timer
-    QVector3D attitude; // euler angles, roll, pith, yaw
+    quint32 time;           // sim timer, ms
+    QVector3D attitude;     // euler angles (roll, pith, yaw), deg
     QVector3D attitude2;
-    QVector3D gyro;     // rates
-    QVector3D accel;    // accelerations
-    QVector3D speed;    // speed
-    QVector3D position; // position in world
-    qint8 controls[6];  // controls
+    QVector3D gyro;         // rates, deg/sec
+    QVector3D accel;        // accelerations, m/s^2
+    QVector3D speedNED;     // speed in NED coord, m/s
+    qreal groundspeed;      // ground speed , m/s
+    qreal airspeed;         // air speed, m/s
+    QVector3D position;     // position in world, m
+    qint8 controls[6];      // controls, +/-64
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -53,8 +55,6 @@ public:
     void processTelemetry();
 
     Attitude* att;
-
-protected:
 
 private:
     static const qreal RAD2DEG;
