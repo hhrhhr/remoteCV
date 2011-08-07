@@ -23,6 +23,51 @@ CVcalc::~CVcalc()
 }
 
 // public
+QString CVcalc::parseTelemetry()
+{
+    FlightData& f  = fd[fd_ptr]; // current data
+    Attitude* a = att;
+    QString out = "";
+    out.append(QString::number(f.simTime) + "\n");
+    out.append("matrix:\t"
+               + QString::number(f.M(0,0), 'f', 6) + "\t"
+               + QString::number(f.M(0,1), 'f', 6) + "\t"
+               + QString::number(f.M(0,2), 'f', 6) + "\t"
+               + QString::number(f.M(0,3), 'f', 6) + "\n\t"
+               + QString::number(f.M(1,0), 'f', 6) + "\t"
+               + QString::number(f.M(1,1), 'f', 6) + "\t"
+               + QString::number(f.M(1,2), 'f', 6) + "\t"
+               + QString::number(f.M(1,3), 'f', 6) + "\n\t"
+               + QString::number(f.M(2,0), 'f', 6) + "\t"
+               + QString::number(f.M(2,1), 'f', 6) + "\t"
+               + QString::number(f.M(2,2), 'f', 6) + "\t"
+               + QString::number(f.M(2,3), 'f', 6) + "\n\t"
+               + QString::number(f.M(3,0), 'f', 6) + "\t"
+               + QString::number(f.M(3,1), 'f', 6) + "\t"
+               + QString::number(f.M(3,2), 'f', 6) + "\t"
+               + QString::number(f.M(3,3), 'f', 6) + "\n\n");
+    out.append("quat:\t"
+               + QString::number(a->quat.scalar(), 'f', 6) + "\t"
+               + QString::number(a->quat.x(), 'f', 6) + "\t"
+               + QString::number(a->quat.y(), 'f', 6) + "\t"
+               + QString::number(a->quat.z(), 'f', 6) + "\n");
+    out.append("rpy:\t"
+               + QString::number(a->attitude.x(), 'f', 6) + "\t"
+               + QString::number(a->attitude.x(), 'f', 6) + "\t"
+               + QString::number(a->attitude.x(), 'f', 6) + "\n\n");
+    out.append("rate:\t"
+               + QString::number(f.rate.x(), 'f', 6) + "\t"
+               + QString::number(f.rate.y(), 'f', 6) + "\t"
+               + QString::number(f.rate.z(), 'f', 6) + "\n\n");
+    out.append("speed:\t"
+               + QString::number(f.speed.x(), 'f', 6) + "\t"
+               + QString::number(f.speed.y(), 'f', 6) + "\t"
+               + QString::number(f.speed.z(), 'f', 6) + "\n\n");
+    out.append(QString::number(f.simTime));
+    out.append(QString::number(f.simTime));
+
+    return out;
+}
 
 void CVcalc::getTelemetry(QString telemetry)
 {
@@ -92,20 +137,33 @@ void CVcalc::getTelemetry(QString telemetry)
         QVector3D gs = QVector3D(f.speed.x(), 0.0, f.speed.z());
         att->groundspeed= gs.length();
 
+//        qDebug() << f.M;
+//        f.M.scale(1,1,-1);
+//        f.M.scale(1,-1,1);
+//        f.M.scale(-1,1,1);
+        f.M.scale(-1,1,-1);
+//        f.M.rotate(90, 1, 0, 0);
+//        f.M *= QMatrix4x4(0,0,1,0,
+//                          0,1,0,0,
+//                          1,0,0,0,
+//                          0,0,0,1);
+//        qDebug() << f.M << "\n";
+
         // roll, pitch, yaw
         QVector3D rpy1;
         cvMatrix2rpy(f.M, rpy1);
-        rpy1 *= -1; // mirror the vector
+//        rpy1 *= -1; // mirror the vector
         att->attitude  = rpy1;
 
         // quaternion
         QQuaternion Q;
         cvMatrix2quaternion(f.M, Q);
+        att->quat = Q;
 
         // second variant of rpy
         QVector3D rpy2;
         quaternion2rpy(Q, rpy2);
-        rpy2 *= -1; // mirror the vector
+//        rpy2 *= -1; // mirror the vector
         att->attitude2 = rpy2;
 
 
@@ -170,7 +228,7 @@ void CVcalc::cvMatrix2quaternion(const QMatrix4x4 &M, QQuaternion &Q)
 
     Q.setX(x);
     Q.setY(y);
-    Q.setZ(z);
+    Q.setZ(-z);
     Q.setScalar(w);
 }
 

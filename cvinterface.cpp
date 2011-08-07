@@ -7,8 +7,8 @@ CVInterface::CVInterface(QObject *parent) :
     cvSocket = new QTcpSocket(this);
     m_calc = new CVcalc(this);
 
-    connect(parent, SIGNAL(needTelemetry(QString)), this, SLOT(onNeedTelemetry(QString)));
-    tType = "";
+    connect(parent, SIGNAL(needTelemetry(quint8)), this, SLOT(onNeedTelemetry(quint8)));
+    tType = 0;
 
     connect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
     connect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
@@ -65,17 +65,15 @@ void CVInterface::slotHostFounded()
 {
     qDebug("host lookup has succeeded");
     emit cvStateChanged(cvHostFound, "host lookup has succeeded");
-//    emit cvStateError("host lookup has succeeded");
 }
 
 void CVInterface::slotConnected()
 {
     qDebug("connection has been successfully established");
     emit cvStateChanged(cvConnected, "connection has been successfully established");
-//    emit cvStateError("connection has been successfully established");
 }
 
-void CVInterface::onNeedTelemetry(QString type)
+void CVInterface::onNeedTelemetry(quint8 type)
 {
     tType = type;
 }
@@ -85,9 +83,24 @@ void CVInterface::slotReadyRead()
     QString telemetry = cvSocket->readLine();
     m_calc->getTelemetry(telemetry);
 
-    if (tType == "raw") {
-        emit processOutput(telemetry);
-        tType = "";
+    QString parsed;
+    switch (tType) {
+        case 1 :    // both
+            parsed = m_calc->parseTelemetry();
+            emit processOutput(telemetry, parsed);
+            tType = 0;
+            break;
+        case 2 :    // parse
+            emit processOutput(telemetry, "");
+            tType = 0;
+            break;
+        case 3 :    // parsed
+            parsed = m_calc->parseTelemetry();
+            emit processOutput("", parsed);
+            tType = 0;
+            break;
+        default :
+            break;
     }
 }
 
@@ -100,13 +113,11 @@ void CVInterface::slotDisconnected()
 {
     qDebug("socket has been disconnected");
     emit cvStateChanged(cvDisconnected, "socket has been disconnected");
-//    emit cvStateError("socket has been disconnected");
 }
 
 void CVInterface::displayError(QAbstractSocket::SocketError socketError)
 {
     Q_UNUSED(socketError);
     emit cvStateChanged(cvError, cvSocket->errorString());
-//    emit cvStateError(cvSocket->errorString());
     qDebug() << "error" << cvSocket->errorString();
 }

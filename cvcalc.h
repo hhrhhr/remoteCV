@@ -32,6 +32,7 @@ public:
     quint32 time;           // sim timer, ms
     QVector3D attitude;     // euler angles (roll, pith, yaw), deg
     QVector3D attitude2;
+    QQuaternion quat;
     QVector3D gyro;         // rates, deg/sec
     QVector3D accel;        // accelerations, m/s^2
     QVector3D speedNED;     // speed in NED coord, m/s
@@ -52,7 +53,7 @@ public:
     ~CVcalc();
 
     void getTelemetry(QString telemetry);
-    void processTelemetry();
+    QString parseTelemetry();
 
     Attitude* att;
 
@@ -63,11 +64,11 @@ private:
     FlightData* fd;
 
     void cvMatrix2quaternion(const QMatrix4x4& M, QQuaternion& Q);
-    void cvMatrix2quaternion_2(const QMatrix4x4& M, QQuaternion& Q);
+//    void cvMatrix2quaternion_2(const QMatrix4x4& M, QQuaternion& Q);
     void cvMatrix2rpy(const QMatrix4x4& M, QVector3D& rpy);
-    void cvMatrix2rpy_2(const QMatrix4x4& M, QVector3D& rpy);
+//    void cvMatrix2rpy_2(const QMatrix4x4& M, QVector3D& rpy);
     void quaternion2rpy(const QQuaternion& Q, QVector3D& rpy);
-    void quaternion2rpy_2(const QQuaternion& Q, QVector3D& rpy);
+//    void quaternion2rpy_2(const QQuaternion& Q, QVector3D& rpy);
 };
 
 #endif // CVCALC_H

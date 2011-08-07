@@ -16,9 +16,7 @@ RemoteCV::RemoteCV(QWidget *parent) :
     m_cv = new CVInterface(this);
     connect(m_cv, SIGNAL(cvStateChanged(CVInterface::cvState, QString)),
             this, SLOT(oncvStateChanged(CVInterface::cvState, QString)));
-//    connect(m_cv, SIGNAL(cvStateError(QString)),
-//            this, SLOT(oncvStateError(QString)));
-    connect(m_cv, SIGNAL(processOutput(QString)), this, SLOT(slotProcessOutput(QString)));
+    connect(m_cv, SIGNAL(processOutput(QString, QString)), this, SLOT(slotProcessOutput(QString, QString)));
 
     screenUpdate = new QTimer();
     connect(screenUpdate, SIGNAL(timeout()), this, SLOT(onScreenUpdate()));
@@ -28,13 +26,6 @@ RemoteCV::RemoteCV(QWidget *parent) :
 RemoteCV::~RemoteCV()
 {
     qDebug() << "~RemoteCV";
-//    disconnect(m_cv, SIGNAL(cvStateError(QString)),
-//            this, SLOT(oncvStateError(QString)));
-//    disconnect(m_cv, SIGNAL(cvStateChanged(CVInterface::cvState)),
-//               this, SLOT(oncvStateChanged(CVInterface::cvState)));
-//    delete m_cv;
-//    delete statusTimer;
-//    delete ui;
 }
 
 // private slots
@@ -116,9 +107,12 @@ void RemoteCV::oncvStateChanged(CVInterface::cvState state, QString error)
     }
 }
 
-void RemoteCV::slotProcessOutput(QString txt)
+void RemoteCV::slotProcessOutput(QString txtRaw, QString txtParsed)
 {
-    ui->console->setPlainText(txt);
+    if (txtRaw > "")
+        ui->consoleRaw->setPlainText(txtRaw);
+    if (txtParsed > "")
+        ui->consoleParsed->setPlainText(txtParsed);
 }
 
 void RemoteCV::onScreenUpdate()
@@ -128,6 +122,11 @@ void RemoteCV::onScreenUpdate()
 
     switch (ui->tabWidget->currentIndex()) {
         case 0:
+            if (textUpdate->elapsed() > 333) {
+                //
+
+                textUpdate->restart();
+            }
             break;
         case 1:
             // refresh of text label - 3Hz
@@ -171,15 +170,22 @@ void RemoteCV::onScreenUpdate()
     }
 }
 
-//void RemoteCV::oncvStateError(QString socketError)
-//{
-//    ui->cvLastError->setText(socketError);
-//}
-
 void RemoteCV::on_getTelemetry_clicked()
 {
-    emit needTelemetry("raw");
     m_cv->sendCommand("getTelemetry-2\n");
+    emit needTelemetry(1);
+}
+
+void RemoteCV::on_getRawTelemetry_clicked()
+{
+    m_cv->sendCommand("getTelemetry-2\n");
+    emit needTelemetry(2);
+}
+
+void RemoteCV::on_getParsedTelemetry_clicked()
+{
+    m_cv->sendCommand("getTelemetry-2\n");
+    emit needTelemetry(3);
 }
 
 void RemoteCV::on_requestControl_clicked()

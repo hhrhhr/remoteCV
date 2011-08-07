@@ -21,7 +21,7 @@ public:
     ~RemoteCV();
 
 signals:
-    void needTelemetry(QString);
+    void needTelemetry(quint8);
 
 private:
     Ui::remoteCV* ui;
@@ -37,12 +37,13 @@ private slots:
     void on_cvDisconnect_clicked();
     void onTimeout();
     void oncvStateChanged(CVInterface::cvState state, QString error);
-//    void oncvStateError(QString socketError);
-    void slotProcessOutput(QString txt);
+    void slotProcessOutput(QString txtRaw, QString txtParsed);
 
     void onScreenUpdate();
 
     void on_getTelemetry_clicked();
+    void on_getRawTelemetry_clicked();
+    void on_getParsedTelemetry_clicked();
     void on_requestControl_clicked();
     void on_setControl_clicked();
     void on_releaseControl_clicked();
