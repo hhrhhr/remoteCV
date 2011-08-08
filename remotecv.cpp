@@ -34,7 +34,7 @@ void RemoteCV::on_cvConnect_clicked()
 {
     ui->cvConnect->setDisabled(TRUE);
     statusTimer->start(1000);
-    screenUpdate->start(ui->cvRefresh->value());
+    screenUpdate->start(ui->cvRefresh_2->value());
     textUpdate->start();
     m_cv->connectToCV(ui->cvHost->text(), ui->cvPort->value());
 }
@@ -155,9 +155,21 @@ void RemoteCV::onScreenUpdate()
             ui->yRate->setValue(a->gyro.y());
             ui->zRate->setValue(a->gyro.z());
 
-            ui->xAccel->setValue(a->accel.x());
-            ui->yAccel->setValue(a->accel.y());
-            ui->zAccel->setValue(a->accel.z());
+            ui->xSpeedRaw->setValue(a->speedNED.x()*10);
+            ui->ySpeedRaw->setValue(a->speedNED.y()*10);
+            ui->zSpeedRaw->setValue(a->speedNED.z()*10);
+
+            ui->xSpeedRaw_2->setValue(a->speedNED2.x()*10);
+            ui->ySpeedRaw_2->setValue(a->speedNED2.y()*10);
+            ui->zSpeedRaw_2->setValue(a->speedNED2.z()*10);
+
+            ui->xAccel->setValue(a->accel.x()*10);
+            ui->yAccel->setValue(a->accel.y()*10);
+            ui->zAccel->setValue(a->accel.z()*10);
+
+            ui->xAccel_2->setValue(a->accel2.x()*10);
+            ui->yAccel_2->setValue(a->accel2.y()*10);
+            ui->zAccel_2->setValue(a->accel2.z()*10);
             break;
         case 2:
             ui->ch1->setValue(a->controls[0]);
@@ -204,6 +216,11 @@ void RemoteCV::on_releaseControl_clicked()
 }
 
 void RemoteCV::on_cvRefresh_valueChanged(int interval)
+{
+    screenUpdate->setInterval(interval);
+}
+
+void RemoteCV::on_cvRefresh_2_valueChanged(int interval)
 {
     screenUpdate->setInterval(interval);
 }

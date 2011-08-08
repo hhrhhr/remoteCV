@@ -23,6 +23,9 @@ public:
     quint8 model;       // model: 0-heli, 1-plane
     float controls[6];  // ail, ele, thr, rud, thrhld/gear, iddle/flaps; -1...+1
     uchar cr;           // "\n" at end
+
+    QVector3D speed2;
+    QVector3D accel2;
 };
 
 class Attitude
@@ -35,7 +38,9 @@ public:
     QQuaternion quat;
     QVector3D gyro;         // rates, deg/sec
     QVector3D accel;        // accelerations, m/s^2
+    QVector3D accel2;
     QVector3D speedNED;     // speed in NED coord, m/s
+    QVector3D speedNED2;
     qreal groundspeed;      // ground speed , m/s
     qreal airspeed;         // air speed, m/s
     QVector3D position;     // position in world, m
