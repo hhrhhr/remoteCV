@@ -21,15 +21,6 @@ CVInterface::CVInterface(QObject *parent) :
 CVInterface::~CVInterface()
 {
     qDebug("~CVInterface");
-//    disconnect(cvSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
-//    disconnect(cvSocket, SIGNAL(disconnected()), this, SLOT(slotDisconnected()));
-//    disconnect(cvSocket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotWritten(qint64)));
-//    disconnect(cvSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
-//    disconnect(cvSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
-//    disconnect(cvSocket, SIGNAL(hostFound()), this, SLOT(slotHostFounded()));
-
-//    delete m_calc;
-//    delete cvSocket;
 }
 
 // public //////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +75,7 @@ void CVInterface::slotReadyRead()
     m_calc->getTelemetry(telemetry);
 
     QString parsed;
+//    telemetry.replace(" ", ", ");
     switch (tType) {
         case 1 :    // both
             parsed = m_calc->parseTelemetry();

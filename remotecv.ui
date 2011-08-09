@@ -310,9 +310,6 @@
          </property>
          <item>
           <layout class="QFormLayout" name="formLayout_4">
-           <property name="horizontalSpacing">
-            <number>3</number>
-           </property>
            <property name="verticalSpacing">
             <number>3</number>
            </property>
@@ -347,7 +344,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -366,7 +363,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -385,7 +382,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -398,9 +395,6 @@
          </item>
          <item>
           <layout class="QFormLayout" name="formLayout_3">
-           <property name="horizontalSpacing">
-            <number>3</number>
-           </property>
            <property name="verticalSpacing">
             <number>3</number>
            </property>
@@ -435,7 +429,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -454,7 +448,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -473,7 +467,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -486,9 +480,6 @@
          </item>
          <item>
           <layout class="QFormLayout" name="formLayout_2">
-           <property name="horizontalSpacing">
-            <number>3</number>
-           </property>
            <property name="verticalSpacing">
             <number>3</number>
            </property>
@@ -509,7 +500,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -535,7 +526,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>
@@ -561,7 +552,7 @@
              </property>
              <property name="minimumSize">
               <size>
-               <width>40</width>
+               <width>50</width>
                <height>0</height>
               </size>
              </property>

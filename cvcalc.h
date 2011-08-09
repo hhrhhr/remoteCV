@@ -24,8 +24,8 @@ public:
     float controls[6];  // ail, ele, thr, rud, thrhld/gear, iddle/flaps; -1...+1
     uchar cr;           // "\n" at end
 
-    QVector3D speed2;
-    QVector3D accel2;
+    // TODO: delete it
+    QVector3D speed2;   // computed speed
 };
 
 class Attitude
@@ -34,17 +34,19 @@ public:
     Attitude() {}
     quint32 time;           // sim timer, ms
     QVector3D attitude;     // euler angles (roll, pith, yaw), deg
-    QVector3D attitude2;
     QQuaternion quat;
     QVector3D gyro;         // rates, deg/sec
     QVector3D accel;        // accelerations, m/s^2
-    QVector3D accel2;
     QVector3D speedNED;     // speed in NED coord, m/s
-    QVector3D speedNED2;
     qreal groundspeed;      // ground speed , m/s
     qreal airspeed;         // air speed, m/s
     QVector3D position;     // position in world, m
     qint8 controls[6];      // controls, +/-64
+
+    // TODO: delete it
+    QVector3D attitude2;    // second variants
+    QVector3D speedNED2;
+    QVector3D accel2;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
