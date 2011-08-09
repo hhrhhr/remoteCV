@@ -170,7 +170,10 @@ void CVcalc::getTelemetry(QString telemetry)
         // add gravity
         a.setY(a.y() - 9.81d);
         // rotate world to model
-        a = fn.M.inverted().mapVector(a);
+//        a = fn.M.inverted().mapVector(a);
+        QQuaternion Qinv = Q.conjugate();
+        QQuaternion A = QQuaternion(0, a);
+        a = (Qinv * A * Q).vector();
         att->accel = a;
 
     // acceleration from position
