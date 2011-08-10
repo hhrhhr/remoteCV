@@ -93,7 +93,7 @@
       <bool>true</bool>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabSettings">
       <attribute name="title">
@@ -776,7 +776,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QDial" name="yRate">
+          <widget class="QDial" name="zRate">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -801,7 +801,7 @@
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QDial" name="zRate">
+          <widget class="QDial" name="yRate">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -883,7 +883,7 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QDial" name="yAccel">
+          <widget class="QDial" name="zAccel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -908,7 +908,7 @@
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QDial" name="zAccel">
+          <widget class="QDial" name="yAccel">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -945,7 +945,7 @@
          <item row="0" column="1">
           <widget class="QLabel" name="label_16">
            <property name="text">
-            <string>accel up, +/-5G</string>
+            <string>accel right, +/-5G</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -955,7 +955,7 @@
          <item row="0" column="2">
           <widget class="QLabel" name="label_17">
            <property name="text">
-            <string>accel right, +/-5G</string>
+            <string>accel up, +/-5G</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>

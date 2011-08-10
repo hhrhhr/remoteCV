@@ -73,11 +73,8 @@ private:
     FlightData* fd;
 
     void cvMatrix2quaternion(const QMatrix4x4& M, QQuaternion& Q);
-//    void cvMatrix2quaternion_2(const QMatrix4x4& M, QQuaternion& Q);
     void cvMatrix2rpy(const QMatrix4x4& M, QVector3D& rpy);
-//    void cvMatrix2rpy_2(const QMatrix4x4& M, QVector3D& rpy);
     void quaternion2rpy(const QQuaternion& Q, QVector3D& rpy);
-//    void quaternion2rpy_2(const QQuaternion& Q, QVector3D& rpy);
 };
 
 #endif // CVCALC_H
