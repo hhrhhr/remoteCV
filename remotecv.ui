@@ -13,8 +13,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>720</height>
+    <width>334</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,9 +29,6 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>30</number>
-     </property>
      <item>
       <widget class="QPushButton" name="cvConnect">
        <property name="text">
@@ -96,7 +93,7 @@
       <bool>true</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabSettings">
       <attribute name="title">
@@ -391,6 +388,13 @@
           </layout>
          </item>
          <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
           <layout class="QFormLayout" name="formLayout_3">
            <property name="verticalSpacing">
             <number>3</number>
@@ -474,6 +478,13 @@
             </widget>
            </item>
           </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
          </item>
          <item>
           <layout class="QFormLayout" name="formLayout_2">
@@ -576,26 +587,66 @@
         </layout>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout_2">
-         <property name="spacing">
-          <number>3</number>
+        <widget class="Line" name="line_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>roll, +/- 180°</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="1">
-          <widget class="QDial" name="xRate">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(198, 255, 208);</string>
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>pitch, +/- 90°</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>yaw, +/- 180°</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QDial" name="roll">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="minimum">
-            <number>-300</number>
+            <number>-180</number>
            </property>
            <property name="maximum">
-            <number>300</number>
+            <number>180</number>
            </property>
            <property name="tracking">
             <bool>false</bool>
            </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
            <property name="notchTarget">
-            <double>50.000000000000000</double>
+            <double>30.000000000000000</double>
            </property>
            <property name="notchesVisible">
             <bool>true</bool>
@@ -603,535 +654,18 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QDial" name="roll">
-           <property name="minimum">
-            <number>-180</number>
-           </property>
-           <property name="maximum">
-            <number>180</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="wrapping">
-            <bool>true</bool>
-           </property>
-           <property name="notchTarget">
-            <double>30.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QDial" name="roll_2">
-           <property name="minimum">
-            <number>-180</number>
-           </property>
-           <property name="maximum">
-            <number>180</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="wrapping">
-            <bool>true</bool>
-           </property>
-           <property name="notchTarget">
-            <double>30.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QDial" name="xSpeedRaw">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(198, 255, 208);</string>
-           </property>
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QDial" name="zSpeedRaw">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(198, 255, 208);</string>
-           </property>
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QDial" name="xSpeedRaw_2">
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3">
-          <widget class="QDial" name="zSpeedRaw_2">
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QDial" name="xAccel">
-           <property name="minimum">
-            <number>-500</number>
-           </property>
-           <property name="maximum">
-            <number>500</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QDial" name="xAccel_2">
-           <property name="minimum">
-            <number>-500</number>
-           </property>
-           <property name="maximum">
-            <number>500</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_4">
+          <widget class="QDial" name="pitch">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>rate</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_6">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>rpy1</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_7">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>rpy2</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_8">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>speed1</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="label_10">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>speed2</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_11">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>accel1</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="label_12">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>accel2</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QDial" name="ySpeedRaw_2">
            <property name="minimum">
-            <number>-300</number>
+            <number>-90</number>
            </property>
            <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QDial" name="ySpeedRaw">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(198, 255, 208);</string>
-           </property>
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QDial" name="yRate">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(198, 255, 208);</string>
-           </property>
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>50.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QDial" name="zRate">
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(198, 255, 208);</string>
-           </property>
-           <property name="minimum">
-            <number>-300</number>
-           </property>
-           <property name="maximum">
-            <number>300</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>50.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QDial" name="yAccel">
-           <property name="minimum">
-            <number>-500</number>
-           </property>
-           <property name="maximum">
-            <number>500</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="3">
-          <widget class="QDial" name="zAccel">
-           <property name="minimum">
-            <number>-500</number>
-           </property>
-           <property name="maximum">
-            <number>500</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QDial" name="yAccel_2">
-           <property name="minimum">
-            <number>-500</number>
-           </property>
-           <property name="maximum">
-            <number>500</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3">
-          <widget class="QDial" name="zAccel_2">
-           <property name="minimum">
-            <number>-500</number>
-           </property>
-           <property name="maximum">
-            <number>500</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="notchTarget">
-            <double>100.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QDial" name="yaw">
-           <property name="minimum">
-            <number>-180</number>
-           </property>
-           <property name="maximum">
-            <number>180</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="wrapping">
-            <bool>true</bool>
-           </property>
-           <property name="notchTarget">
-            <double>30.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QDial" name="yaw_2">
-           <property name="minimum">
-            <number>-180</number>
-           </property>
-           <property name="maximum">
-            <number>180</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
-           </property>
-           <property name="wrapping">
-            <bool>true</bool>
-           </property>
-           <property name="notchTarget">
-            <double>30.000000000000000</double>
-           </property>
-           <property name="notchesVisible">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QDial" name="pitch_2">
-           <property name="minimum">
-            <number>-180</number>
-           </property>
-           <property name="maximum">
-            <number>180</number>
+            <number>270</number>
            </property>
            <property name="tracking">
             <bool>false</bool>
@@ -1148,7 +682,13 @@
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QDial" name="pitch">
+          <widget class="QDial" name="yaw">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimum">
             <number>-180</number>
            </property>
@@ -1172,17 +712,257 @@
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
+        <widget class="Line" name="line_5">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_7">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>roll rate, +/- 300°/s</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>pitch rate, +/- 300°/s</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>yaw rate, +/- 300°/s</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QDial" name="xRate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>-300</number>
+           </property>
+           <property name="maximum">
+            <number>300</number>
+           </property>
+           <property name="tracking">
+            <bool>false</bool>
+           </property>
+           <property name="notchTarget">
+            <double>50.000000000000000</double>
+           </property>
+           <property name="notchesVisible">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDial" name="yRate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>-300</number>
+           </property>
+           <property name="maximum">
+            <number>300</number>
+           </property>
+           <property name="tracking">
+            <bool>false</bool>
+           </property>
+           <property name="notchTarget">
+            <double>50.000000000000000</double>
+           </property>
+           <property name="notchesVisible">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QDial" name="zRate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>-300</number>
+           </property>
+           <property name="maximum">
+            <number>300</number>
+           </property>
+           <property name="tracking">
+            <bool>false</bool>
+           </property>
+           <property name="notchTarget">
+            <double>50.000000000000000</double>
+           </property>
+           <property name="notchesVisible">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-        </spacer>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QRadioButton" name="radioButton">
+           <property name="text">
+            <string>use speed delta</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radioButton_2">
+           <property name="text">
+            <string>use position delta</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="1" column="0">
+          <widget class="QDial" name="xAccel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>-500</number>
+           </property>
+           <property name="maximum">
+            <number>500</number>
+           </property>
+           <property name="tracking">
+            <bool>false</bool>
+           </property>
+           <property name="notchTarget">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="notchesVisible">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QDial" name="yAccel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>-500</number>
+           </property>
+           <property name="maximum">
+            <number>500</number>
+           </property>
+           <property name="tracking">
+            <bool>false</bool>
+           </property>
+           <property name="notchTarget">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="notchesVisible">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QDial" name="zAccel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimum">
+            <number>-500</number>
+           </property>
+           <property name="maximum">
+            <number>500</number>
+           </property>
+           <property name="tracking">
+            <bool>false</bool>
+           </property>
+           <property name="notchTarget">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="notchesVisible">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>accel forward, +/-5G</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>accel up, +/-5G</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>accel right, +/-5G</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

@@ -49,6 +49,7 @@ private slots:
     void on_releaseControl_clicked();
     void on_cvRefresh_valueChanged(int interval);
     void on_cvRefresh_2_valueChanged(int interval);
+    void on_radioButton_toggled(bool checked);
 };
 
 #endif // REMOTECV_H

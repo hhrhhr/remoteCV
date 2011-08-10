@@ -13,6 +13,8 @@ CVcalc::CVcalc(QObject *parent) :
     fd_ptr = 0;
 
     att = new Attitude;
+
+    accelUseSpeed = TRUE;
 }
 
 CVcalc::~CVcalc()
@@ -162,9 +164,20 @@ void CVcalc::getTelemetry(QString telemetry)
         qreal dt = (fn.simTime - fo.simTime);
         dt /= 1000;
 
-    // acceleration from speed
         // speed delta
-        QVector3D dv = fn.speed - fo.speed;
+        QVector3D dv;
+        if (accelUseSpeed) {
+            dv = fn.speed - fo.speed;
+        } else {
+            QVector3D sn = QVector3D(fn.M(0, 3), fn.M(1, 3), fn.M(2, 3));
+            QVector3D so = QVector3D(fo.M(0, 3), fo.M(1, 3), fo.M(2, 3));
+            QVector3D ds = sn - so;
+            // current speed
+            QVector3D v = ds / dt;
+            fn.speed2 = v;
+            att->speedNED2 = v;
+            dv = v - fo.speed2;
+        }
         // acceleration
         QVector3D a = dv / dt;
         // add gravity
@@ -175,25 +188,6 @@ void CVcalc::getTelemetry(QString telemetry)
         QQuaternion A = QQuaternion(0, a);
         a = (Qinv * A * Q).vector();
         att->accel = a;
-
-    // acceleration from position
-        // delta movement from position
-        QVector3D sn = QVector3D(fn.M(0, 3), fn.M(1, 3), fn.M(2, 3));
-        QVector3D so = QVector3D(fo.M(0, 3), fo.M(1, 3), fo.M(2, 3));
-        QVector3D ds = sn - so;
-        // current speed
-        QVector3D v = ds / dt;
-        fn.speed2 = v;
-        att->speedNED2 = v;
-        // speed delta
-        dv = v - fo.speed2;
-        // acceleration
-        a = dv / dt;
-        // add gravity
-        a.setY(a.y() - 9.81d);
-        // rotate world to model
-        a = fn.M.inverted().mapVector(a);
-        att->accel2 = a;
 
         // control channels
         for (int i = 0; i < 6; ++i)

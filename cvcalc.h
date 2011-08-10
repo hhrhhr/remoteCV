@@ -49,6 +49,7 @@ public:
     QVector3D accel2;
 };
 
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 class CVcalc : public QObject
@@ -63,6 +64,7 @@ public:
     QString parseTelemetry();
 
     Attitude* att;
+    bool accelUseSpeed;
 
 private:
     static const qreal RAD2DEG;

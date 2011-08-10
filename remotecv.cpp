@@ -147,29 +147,29 @@ void RemoteCV::onScreenUpdate()
             ui->pitch->setValue(a->attitude.y());
             ui->yaw->setValue(a->attitude.z());
 
-            ui->roll_2->setValue(a->attitude2.x());
-            ui->pitch_2->setValue(a->attitude2.y());
-            ui->yaw_2->setValue(a->attitude2.z());
+//            ui->roll_2->setValue(a->attitude2.x());
+//            ui->pitch_2->setValue(a->attitude2.y());
+//            ui->yaw_2->setValue(a->attitude2.z());
 
             ui->xRate->setValue(a->gyro.x());
             ui->yRate->setValue(a->gyro.y());
             ui->zRate->setValue(a->gyro.z());
 
-            ui->xSpeedRaw->setValue(a->speedNED.x()*10);
-            ui->ySpeedRaw->setValue(a->speedNED.y()*10);
-            ui->zSpeedRaw->setValue(a->speedNED.z()*10);
+//            ui->xSpeedRaw->setValue(a->speedNED.x()*10);
+//            ui->ySpeedRaw->setValue(a->speedNED.y()*10);
+//            ui->zSpeedRaw->setValue(a->speedNED.z()*10);
 
-            ui->xSpeedRaw_2->setValue(a->speedNED2.x()*10);
-            ui->ySpeedRaw_2->setValue(a->speedNED2.y()*10);
-            ui->zSpeedRaw_2->setValue(a->speedNED2.z()*10);
+//            ui->xSpeedRaw_2->setValue(a->speedNED2.x()*10);
+//            ui->ySpeedRaw_2->setValue(a->speedNED2.y()*10);
+//            ui->zSpeedRaw_2->setValue(a->speedNED2.z()*10);
 
             ui->xAccel->setValue(a->accel.x()*10);
             ui->yAccel->setValue(a->accel.y()*10);
             ui->zAccel->setValue(a->accel.z()*10);
 
-            ui->xAccel_2->setValue(a->accel2.x()*10);
-            ui->yAccel_2->setValue(a->accel2.y()*10);
-            ui->zAccel_2->setValue(a->accel2.z()*10);
+//            ui->xAccel_2->setValue(a->accel2.x()*10);
+//            ui->yAccel_2->setValue(a->accel2.y()*10);
+//            ui->zAccel_2->setValue(a->accel2.z()*10);
             break;
         case 2:
             ui->ch1->setValue(a->controls[0]);
@@ -223,4 +223,13 @@ void RemoteCV::on_cvRefresh_valueChanged(int interval)
 void RemoteCV::on_cvRefresh_2_valueChanged(int interval)
 {
     screenUpdate->setInterval(interval);
+}
+
+void RemoteCV::on_radioButton_toggled(bool checked)
+{
+    if (checked) {
+        m_cv->m_calc->accelUseSpeed = TRUE;
+    } else {
+        m_cv->m_calc->accelUseSpeed = FALSE;
+    }
 }
